@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m venv venv)",
+      "Bash(venv/Scripts/pip install *)",
+      "Bash(venv/Scripts/uvicorn backend.main:app --port 8000)",
+      "Bash(curl -s http://localhost:8000/)",
+      "Bash(curl -s \"http://localhost:8000/cidades\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Cidades:', [c['nome'] for c in d['cidades']]\\)\")",
+      "Bash(curl -s \"http://localhost:8000/automacao/pacotes?multiplicador=1.4\")",
+      "Bash(python -c \"import sys,json; r=json.load\\(sys.stdin\\); print\\('Setup:', r['setup'], '| Mensal:', r['mensalidade'], '| Design:', r['design_nome']\\)\")",
+      "Bash(curl -s -X POST http://localhost:8000/combo/calcular -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(python -c ' *)",
+      "Bash(curl -s -X POST http://localhost:8000/gerar-proposta -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(python -c \"import sys,json; print\\(json.load\\(sys.stdin\\)['texto']\\)\")",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "mcp__2630ec47-a5f9-4bfc-be22-8beff3548ea1__list_teams",
+      "mcp__2630ec47-a5f9-4bfc-be22-8beff3548ea1__list_projects",
+      "Bash(npx vercel *)",
+      "mcp__2630ec47-a5f9-4bfc-be22-8beff3548ea1__deploy_to_vercel"
+    ]
+  }
+}

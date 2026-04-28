@@ -1,6 +1,6 @@
 from typing import List
 from .data import TIPOS_PROJETO, COMPLEXIDADES_DESIGN, FUNCIONALIDADES, OPCOES_CONTEUDO, PRAZOS, PLANOS_MENSAIS
-from ..shared.utils import arredondar_dezena
+from ..shared.utils import arredondar_dezena, multiplicador_mensalidade_site
 
 TIPOS_MAP = {t["id"]: t for t in TIPOS_PROJETO}
 DESIGN_MAP = {d["id"]: d for d in COMPLEXIDADES_DESIGN}
@@ -71,7 +71,8 @@ def calcular_site(
     setup_float = subtotal * design["multiplicador"] * prazo["multiplicador"] * multiplicador_cidade
     setup = arredondar_dezena(setup_float)
 
-    mensalidade = arredondar_dezena(plano["preco_base"] * multiplicador_cidade)
+    mult_mensalidade = multiplicador_mensalidade_site(setup)
+    mensalidade = arredondar_dezena(plano["preco_base"] * multiplicador_cidade * mult_mensalidade)
 
     return {
         "cidade": cidade,
@@ -92,6 +93,7 @@ def calcular_site(
         "descricao_plano": plano["descricao"],
         "setup": setup,
         "mensalidade": mensalidade,
+        "mult_mensalidade": mult_mensalidade,
         "detalhamento": {
             "tipo_preco": tipo["preco_base"],
             "paginas_extras_preco": preco_extras,
@@ -102,5 +104,6 @@ def calcular_site(
             "mult_design": design["multiplicador"],
             "mult_prazo": prazo["multiplicador"],
             "mult_cidade": multiplicador_cidade,
+            "mult_mensalidade": mult_mensalidade,
         },
     }

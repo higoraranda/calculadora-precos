@@ -14,7 +14,7 @@ export const getFuncionalidades = () => api.get('/site/funcionalidades').then(r 
 export const getDesigns = () => api.get('/site/designs').then(r => r.data)
 export const getConteudos = () => api.get('/site/conteudos').then(r => r.data)
 export const getPrazos = () => api.get('/site/prazos').then(r => r.data)
-export const getPlanosMensais = (multiplicador) => api.get(`/site/planos-mensais?multiplicador=${multiplicador}`).then(r => r.data)
+export const getPlanosMensais = (multiplicador, setup = 0) => api.get(`/site/planos-mensais?multiplicador=${multiplicador}&setup=${setup}`).then(r => r.data)
 export const calcularSite = (data) => api.post('/site/calcular', data).then(r => r.data)
 
 export const calcularCombo = (data) => api.post('/combo/calcular', data).then(r => r.data)

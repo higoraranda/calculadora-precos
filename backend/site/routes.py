@@ -32,8 +32,8 @@ def listar_prazos():
 
 
 @router.get("/planos-mensais")
-def listar_planos(multiplicador: float = Query(1.0, gt=0)):
-    return get_planos_com_precos(multiplicador)
+def listar_planos(multiplicador: float = Query(1.0, gt=0), setup: float = Query(0.0, ge=0)):
+    return get_planos_com_precos(multiplicador, setup)
 
 
 @router.post("/calcular")

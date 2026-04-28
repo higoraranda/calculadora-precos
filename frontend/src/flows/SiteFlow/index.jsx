@@ -73,6 +73,7 @@ export default function SiteFlow({
   const [loading, setLoading] = useState(true)
   const [calculating, setCalculating] = useState(false)
 
+  // Carrega todos os dados estáticos na montagem (planos sem setup ainda)
   useEffect(() => {
     Promise.all([
       getTiposSite(),
@@ -80,7 +81,7 @@ export default function SiteFlow({
       getDesigns(),
       getConteudos(),
       getPrazos(),
-      getPlanosMensais(multiplicador),
+      getPlanosMensais(multiplicador, 0),
     ])
       .then(([tipos, funcs, designs, conteudos, prazos, planos]) => {
         setData({ tipos, funcionalidades: funcs, designs, conteudos, prazos, planos })
@@ -91,6 +92,15 @@ export default function SiteFlow({
   const currentTipo = data.tipos.find((t) => t.id === form.tipo_id)
   const previewSetup = calcPreview(form, data, multiplicador)
   const currentPlano = data.planos.find((p) => p.id === form.plano_id)
+
+  // Ao entrar na etapa do plano (step 6), re-busca os planos com o setup real
+  useEffect(() => {
+    if (step === 6 && previewSetup > 0) {
+      getPlanosMensais(multiplicador, previewSetup).then((planos) => {
+        setData((d) => ({ ...d, planos }))
+      })
+    }
+  }, [step, previewSetup, multiplicador])
 
   const setField = (field) => (value) => {
     setForm((f) => ({ ...f, [field]: value }))
@@ -137,7 +147,6 @@ export default function SiteFlow({
       }
       const res = await calcularSite(payload)
       if (isComboMode) {
-        // Pass both the API result and the raw form (needed for combo endpoint)
         onComboResult({ ...res, _form: form })
       } else {
         setResultado(res)
@@ -160,6 +169,8 @@ export default function SiteFlow({
     )
 
   const isLastStep = step === 7
+  // Mostra mensalidade no sidebar somente após o usuário escolher o plano (etapa 6+)
+  const showMensalidade = step >= 7 && currentPlano
 
   return (
     <div className="min-h-screen px-4 py-20">
@@ -293,13 +304,22 @@ export default function SiteFlow({
               {form.tipo_id ? `R$ ${previewSetup.toLocaleString('pt-BR')}` : '—'}
             </div>
             <div className="text-xs text-gray-400 mt-0.5">setup estimado</div>
-            {currentPlano && (
+
+            {/* Mensalidade só aparece no resumo (depois de escolher o plano) */}
+            {showMensalidade && (
               <div className="mt-3 pt-3 border-t border-gray-100">
                 <div className="text-xs text-gray-400">+ mensalidade</div>
                 <div className="text-base font-semibold text-gray-700">
                   R$ {(currentPlano.preco_final || 0).toLocaleString('pt-BR')}/mês
                 </div>
                 <div className="text-xs text-gray-400">{currentPlano.nome}</div>
+              </div>
+            )}
+
+            {/* Dica antes de chegar no plano */}
+            {step < 6 && (
+              <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                A mensalidade será calculada com base no valor do setup.
               </div>
             )}
           </div>

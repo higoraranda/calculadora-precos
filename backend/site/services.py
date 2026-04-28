@@ -18,11 +18,12 @@ def get_funcionalidades():
     return FUNCIONALIDADES
 
 
-def get_planos_com_precos(multiplicador: float) -> List[dict]:
+def get_planos_com_precos(multiplicador: float, setup: float = 0.0) -> List[dict]:
+    mult_setup = multiplicador_mensalidade_site(setup) if setup > 0 else 1.0
     result = []
     for p in PLANOS_MENSAIS:
-        preco_final = arredondar_dezena(p["preco_base"] * multiplicador)
-        result.append({**p, "preco_final": preco_final})
+        preco_final = arredondar_dezena(p["preco_base"] * multiplicador * mult_setup)
+        result.append({**p, "preco_final": preco_final, "mult_setup": mult_setup})
     return result
 
 

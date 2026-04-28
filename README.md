@@ -105,38 +105,6 @@ npm run build
 
 ---
 
-## ☁️ Deploy gratuito (recomendado)
-
-### Backend → [Render](https://render.com)
-
-1. Criar conta em render.com
-2. **New → Web Service** → conectar repositório
-3. Configurar:
-   - **Root directory:** `(deixar vazio, raiz do repo)`
-   - **Build command:** `pip install -r backend/requirements.txt`
-   - **Start command:** `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
-   - **Plan:** Free
-4. Aguardar o deploy. URL gerada ex: `https://calculadora-api.onrender.com`
-
-> ⚠️ No plano gratuito do Render, o serviço "dorme" após 15 min de inatividade. A primeira requisição pode demorar ~30s para acordar.
-
----
-
-### Frontend → [Vercel](https://vercel.com)
-
-1. Criar conta em vercel.com
-2. **New Project** → importar repositório
-3. Configurar:
-   - **Framework Preset:** Vite
-   - **Root directory:** `frontend`
-   - **Build command:** `npm run build`
-   - **Output directory:** `dist`
-4. **Environment Variables:**
-   - `VITE_API_URL` = `https://sua-api.onrender.com` (URL do Render)
-5. Deploy automático a cada push!
-
----
-
 ## 🗂️ Endpoints da API
 
 | Método | Rota | Descrição |
@@ -154,19 +122,6 @@ npm run build
 | POST | `/site/calcular` | Calcula site completo |
 | POST | `/combo/calcular` | Calcula combo (automação + site + 10% off) |
 | POST | `/gerar-proposta` | Gera texto formatado da proposta |
-
----
-
-## ✏️ Como atualizar preços
-
-Todos os preços e dados estão centralizados em arquivos de dados — sem necessidade de mexer na lógica:
-
-| O que atualizar | Arquivo |
-|-----------------|---------|
-| Serviços e pacotes de automação | `backend/automacao/data.py` |
-| Tipos de site, funcionalidades, designs, prazos, planos | `backend/site/data.py` |
-| Cidades e multiplicadores | `backend/shared/cidades.py` |
-| Templates das propostas | `backend/shared/proposta.py` |
 
 ---
 

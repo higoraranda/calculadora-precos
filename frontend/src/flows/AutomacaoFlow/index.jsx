@@ -10,6 +10,7 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   const [servicos, setServicos] = useState([])
   const [selectedPacote, setSelectedPacote] = useState(null)
   const [selectedServicos, setSelectedServicos] = useState([])
+  const [extrasDoPlano, setExtrasDoPlano] = useState([]) // extras adicionados ao pacote selecionado
   const [resultado, setResultado] = useState(null)
   const [loading, setLoading] = useState(true)
   const [calculating, setCalculating] = useState(false)
@@ -17,23 +18,60 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   useEffect(() => {
     setLoading(true)
     Promise.all([getPacotes(multiplicador), getServicos(multiplicador)])
-      .then(([pacs, servs]) => { setPacotes(pacs); setServicos(servs) })
+      .then(([pacs, servs]) => {
+        // Enriquecer pacotes com _soma_avulso e servicos_ids para o PackageCards
+        const pacotesEnriquecidos = pacs.map((p) => {
+          const idsNoPacote = p.servicos_ids || []
+          const somaAvulso = idsNoPacote.reduce((sum, id) => {
+            const s = servs.find((sv) => sv.id === id)
+            return sum + (s?.preco_final || 0)
+          }, 0)
+          return { ...p, _soma_avulso: somaAvulso }
+        })
+        setPacotes(pacotesEnriquecidos)
+        setServicos(servs)
+      })
       .finally(() => setLoading(false))
   }, [multiplicador])
 
+  const handleSelectPacote = (id) => {
+    setSelectedPacote(id)
+    setExtrasDoPlano([]) // limpa extras ao trocar de pacote
+  }
+
+  const toggleExtra = (id) => {
+    setExtrasDoPlano((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id])
+  }
+
   const toggleServico = (id) => {
-    setSelectedServicos(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id])
+    setSelectedServicos((prev) => prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id])
   }
 
   const handleCalcular = async () => {
     setCalculating(true)
     try {
-      const payload = tab === 'pacote'
-        ? { cidade, multiplicador_cidade: multiplicador, modo: 'pacote', pacote_id: selectedPacote }
-        : { cidade, multiplicador_cidade: multiplicador, modo: 'personalizado', servicos_ids: selectedServicos }
+      let payload
+      if (tab === 'pacote') {
+        const temExtras = extrasDoPlano.length > 0
+        payload = {
+          cidade,
+          multiplicador_cidade: multiplicador,
+          modo: temExtras ? 'pacote_personalizado' : 'pacote',
+          pacote_id: selectedPacote,
+          extra_servicos_ids: temExtras ? extrasDoPlano : undefined,
+        }
+      } else {
+        payload = {
+          cidade,
+          multiplicador_cidade: multiplicador,
+          modo: 'personalizado',
+          servicos_ids: selectedServicos,
+        }
+      }
+
       const res = await calcularAutomacao(payload)
+
       if (isComboMode) {
-        // Attach raw selection info so ComboFlow can call /combo/calcular
         onComboResult({
           ...res,
           _pacote_id: selectedPacote,
@@ -53,7 +91,13 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
     return <ResultPanel tipo="automacao" resultado={resultado} onReset={() => setResultado(null)} />
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen px-4 py-20">
@@ -74,12 +118,19 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
             onClick={() => setTab('personalizado')}
             className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'personalizado' ? 'bg-white shadow text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            ⚙️ Personalizado
+            ⚙️ Do zero
           </button>
         </div>
 
         {tab === 'pacote' && (
-          <PackageCards pacotes={pacotes} selected={selectedPacote} onSelect={setSelectedPacote} />
+          <PackageCards
+            pacotes={pacotes}
+            servicos={servicos}
+            selected={selectedPacote}
+            onSelect={handleSelectPacote}
+            extras={extrasDoPlano}
+            onToggleExtra={toggleExtra}
+          />
         )}
 
         {tab === 'personalizado' && (
@@ -87,7 +138,10 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
         )}
 
         <div className="mt-8 flex justify-between">
-          <button onClick={onBack} className="px-6 py-3 rounded-xl text-gray-600 border-2 border-gray-200 hover:border-gray-300 font-semibold transition-all">
+          <button
+            onClick={onBack}
+            className="px-6 py-3 rounded-xl text-gray-600 border-2 border-gray-200 hover:border-gray-300 font-semibold transition-all"
+          >
             ← Voltar
           </button>
           <button

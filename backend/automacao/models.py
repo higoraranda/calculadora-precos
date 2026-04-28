@@ -4,9 +4,10 @@ from typing import List, Optional
 class CalcularAutomacaoRequest(BaseModel):
     cidade: str
     multiplicador_cidade: float = Field(gt=0)
-    modo: str = Field(description="'pacote' ou 'personalizado'")
+    modo: str = Field(description="'pacote', 'pacote_personalizado' ou 'personalizado'")
     pacote_id: Optional[str] = None
     servicos_ids: Optional[List[str]] = None
+    extra_servicos_ids: Optional[List[str]] = None  # extras adicionados a um pacote
 
 class ServicoResponse(BaseModel):
     id: str

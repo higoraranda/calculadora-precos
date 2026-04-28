@@ -25,6 +25,7 @@ def calcular(req: CalcularAutomacaoRequest):
             modo=req.modo,
             pacote_id=req.pacote_id,
             servicos_ids=req.servicos_ids,
+            extra_servicos_ids=req.extra_servicos_ids,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

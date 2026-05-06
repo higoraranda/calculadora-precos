@@ -4,7 +4,7 @@ import ProposalModal from './ProposalModal'
 
 const fmt = (n) => `R$ ${Number(n).toLocaleString('pt-BR')}`
 
-export default function ResultPanel({ tipo, resultado, onReset }) {
+export default function ResultPanel({ tipo, resultado, onReset, clientInfo }) {
   const [proposta, setProposta] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -19,8 +19,10 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
   }
 
   const buildDados = () => {
-    if (tipo === 'automacao') return resultado
-    if (tipo === 'site') return resultado
+    const nomeCliente = clientInfo?.nome || ''
+    if (tipo === 'automacao') return { ...resultado, nome_cliente: nomeCliente }
+    if (tipo === 'site') return { ...resultado, nome_cliente: nomeCliente }
+    if (tipo === 'linktree') return { ...resultado, nome_cliente: nomeCliente }
     if (tipo === 'combo') {
       const aut = resultado.automacao
       const site = resultado.site
@@ -39,9 +41,10 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
         funcionalidades: site.funcionalidades,
         prazo_site: site.prazo_texto,
         nome_plano: site.nome_plano,
+        nome_cliente: nomeCliente,
       }
     }
-    return resultado
+    return { ...resultado, nome_cliente: nomeCliente }
   }
 
   const handleGerar = async () => {
@@ -193,7 +196,7 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
         </div>
       </div>
 
-      {proposta && <ProposalModal texto={proposta} onClose={() => setProposta(null)} />}
+      {proposta && <ProposalModal texto={proposta} clientInfo={clientInfo} onClose={() => setProposta(null)} />}
     </div>
   )
 }

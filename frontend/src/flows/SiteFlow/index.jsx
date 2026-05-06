@@ -59,6 +59,7 @@ export default function SiteFlow({
   onBack,
   isComboMode = false,
   onComboResult,
+  clientInfo,
 }) {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState(defaultForm)
@@ -182,6 +183,7 @@ export default function SiteFlow({
         tipo={resultado.is_linktree ? 'linktree' : 'site'}
         resultado={resultado}
         onReset={() => setResultado(null)}
+        clientInfo={clientInfo}
       />
     )
 

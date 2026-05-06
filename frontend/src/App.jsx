@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import MainMenu from './components/MainMenu'
 import CitySelector from './components/CitySelector'
+import ClientForm from './components/ClientForm'
 import Header from './components/Header'
 import AutomacaoFlow from './flows/AutomacaoFlow'
 import SiteFlow from './flows/SiteFlow'
 import ComboFlow from './flows/ComboFlow'
 
 export default function App() {
-  const [screen, setScreen] = useState('menu') // 'menu' | 'city' | 'flow'
+  const [screen, setScreen] = useState('menu') // 'menu' | 'city' | 'client' | 'flow'
   const [mode, setMode] = useState(null)       // 'automacao' | 'site' | 'combo'
   const [cidade, setCidade] = useState(null)   // { nome, multiplicador }
+  const [clientInfo, setClientInfo] = useState({ nome: '', telefone: '' })
 
   const handleModeSelect = (m) => {
     setMode(m)
@@ -18,18 +20,25 @@ export default function App() {
 
   const handleCitySelect = (city) => {
     setCidade(city)
+    setScreen('client')
+  }
+
+  const handleClientConfirm = (info) => {
+    setClientInfo(info)
     setScreen('flow')
   }
 
   const handleBack = () => {
     if (screen === 'city') setScreen('menu')
-    else if (screen === 'flow') setScreen('city')
+    else if (screen === 'client') setScreen('city')
+    else if (screen === 'flow') setScreen('client')
   }
 
   const handleHome = () => {
     setScreen('menu')
     setMode(null)
     setCidade(null)
+    setClientInfo({ nome: '', telefone: '' })
   }
 
   return (
@@ -48,6 +57,10 @@ export default function App() {
           <CitySelector onSelect={handleCitySelect} mode={mode} />
         )}
 
+        {screen === 'client' && (
+          <ClientForm onConfirm={handleClientConfirm} onBack={() => setScreen('city')} />
+        )}
+
         {screen === 'flow' && cidade && (
           <>
             {mode === 'automacao' && (
@@ -55,6 +68,7 @@ export default function App() {
                 cidade={cidade.nome}
                 multiplicador={cidade.multiplicador}
                 onBack={handleBack}
+                clientInfo={clientInfo}
               />
             )}
             {mode === 'site' && (
@@ -62,6 +76,7 @@ export default function App() {
                 cidade={cidade.nome}
                 multiplicador={cidade.multiplicador}
                 onBack={handleBack}
+                clientInfo={clientInfo}
               />
             )}
             {mode === 'combo' && (
@@ -69,6 +84,7 @@ export default function App() {
                 cidade={cidade.nome}
                 multiplicador={cidade.multiplicador}
                 onBack={handleBack}
+                clientInfo={clientInfo}
               />
             )}
           </>

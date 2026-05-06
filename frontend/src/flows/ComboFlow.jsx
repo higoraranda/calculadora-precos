@@ -4,7 +4,7 @@ import SiteFlow from './SiteFlow'
 import ResultPanel from '../components/ResultPanel'
 import { calcularCombo } from '../services/api'
 
-export default function ComboFlow({ cidade, multiplicador, onBack }) {
+export default function ComboFlow({ cidade, multiplicador, onBack, clientInfo }) {
   const [phase, setPhase] = useState('automacao') // 'automacao' | 'site' | 'result'
   const [automacaoPayload, setAutomacaoPayload] = useState(null)
   const [resultado, setResultado] = useState(null)
@@ -63,7 +63,7 @@ export default function ComboFlow({ cidade, multiplicador, onBack }) {
   }
 
   if (phase === 'result' && resultado) {
-    return <ResultPanel tipo="combo" resultado={resultado} onReset={handleReset} />
+    return <ResultPanel tipo="combo" resultado={resultado} onReset={handleReset} clientInfo={clientInfo} />
   }
 
   if (loading) {

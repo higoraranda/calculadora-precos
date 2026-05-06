@@ -4,7 +4,7 @@ from .automacao.routes import router as automacao_router
 from .site.routes import router as site_router
 from .combo.routes import router as combo_router
 from .shared.cidades import CIDADES, PRESETS_OUTRAS_CIDADES
-from .shared.proposta import gerar_proposta_automacao, gerar_proposta_site, gerar_proposta_combo
+from .shared.proposta import gerar_proposta_automacao, gerar_proposta_site, gerar_proposta_combo, gerar_proposta_linktree
 from pydantic import BaseModel
 from typing import Any, Dict
 
@@ -39,6 +39,8 @@ def gerar_proposta(req: PropostaRequest):
         texto = gerar_proposta_automacao(req.dados)
     elif req.tipo == "site":
         texto = gerar_proposta_site(req.dados)
+    elif req.tipo == "linktree":
+        texto = gerar_proposta_linktree(req.dados)
     elif req.tipo == "combo":
         texto = gerar_proposta_combo(req.dados)
     else:

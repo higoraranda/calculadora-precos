@@ -4,7 +4,7 @@ import PackageCards from './PackageCards'
 import CustomBuilder from './CustomBuilder'
 import ResultPanel from '../../components/ResultPanel'
 
-export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMode = false, onComboResult }) {
+export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMode = false, onComboResult, clientInfo }) {
   const [tab, setTab] = useState('pacote')
   const [pacotes, setPacotes] = useState([])
   const [servicos, setServicos] = useState([])
@@ -96,7 +96,7 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   const acrescimoEquipe = numFuncionarios > 1 ? Math.round((numFuncionarios - 1) * 2) : 0
 
   if (resultado) {
-    return <ResultPanel tipo="automacao" resultado={resultado} onReset={() => setResultado(null)} />
+    return <ResultPanel tipo="automacao" resultado={resultado} onReset={() => setResultado(null)} clientInfo={clientInfo} />
   }
 
   if (loading) {

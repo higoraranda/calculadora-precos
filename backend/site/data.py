@@ -3,7 +3,7 @@ TIPOS_PROJETO = [
     {"id": "site_institucional", "nome": "Site Institucional", "descricao": "Site completo para empresas", "preco_base": 1500, "paginas_inclusas": 5, "preco_pagina_extra": 250},
     {"id": "blog_portal", "nome": "Blog / Portal de Conteúdo", "descricao": "Blog ou portal de notícias", "preco_base": 2000, "paginas_inclusas": 6, "preco_pagina_extra": 200},
     {"id": "ecommerce", "nome": "E-commerce / Loja Virtual", "descricao": "Loja virtual completa", "preco_base": 3500, "paginas_inclusas": 7, "preco_pagina_extra": 250},
-    {"id": "sistema_web", "nome": "Sistema Web / SaaS", "descricao": "Sistema ou aplicação web", "preco_base": 5000, "paginas_inclusas": 8, "preco_pagina_extra": 350},
+    {"id": "sistema_web", "nome": "Software / SaaS", "descricao": "Sistema ou aplicação web", "preco_base": 5000, "paginas_inclusas": 8, "preco_pagina_extra": 350},
     {"id": "portfolio", "nome": "Portfólio", "descricao": "Portfólio profissional", "preco_base": 1000, "paginas_inclusas": 4, "preco_pagina_extra": 200},
     {"id": "site_evento", "nome": "Site para Evento", "descricao": "Página para evento ou lançamento", "preco_base": 1200, "paginas_inclusas": 3, "preco_pagina_extra": 250},
 ]

@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Query, HTTPException
-from .services import get_tipos, get_funcionalidades, get_planos_com_precos, calcular_site
+from pydantic import BaseModel, Field
+from .services import get_tipos, get_funcionalidades, get_planos_com_precos, calcular_site, calcular_linktree
 from .models import CalcularSiteRequest
 from ..site.data import COMPLEXIDADES_DESIGN, OPCOES_CONTEUDO, PRAZOS
+
+
+class CalcularLinktreeRequest(BaseModel):
+    cidade: str
+    multiplicador_cidade: float = Field(default=1.0, gt=0)
 
 router = APIRouter(prefix="/site", tags=["site"])
 
@@ -34,6 +40,11 @@ def listar_prazos():
 @router.get("/planos-mensais")
 def listar_planos(multiplicador: float = Query(1.0, gt=0), setup: float = Query(0.0, ge=0)):
     return get_planos_com_precos(multiplicador, setup)
+
+
+@router.post("/calcular-linktree")
+def calcular_linktree_route(req: CalcularLinktreeRequest):
+    return calcular_linktree(cidade=req.cidade)
 
 
 @router.post("/calcular")

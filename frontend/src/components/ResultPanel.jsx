@@ -8,13 +8,14 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
   const [proposta, setProposta] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const colorMap = { automacao: 'blue', site: 'green', combo: 'amber' }
+  const colorMap = { automacao: 'blue', site: 'green', combo: 'amber', linktree: 'purple' }
   const color = colorMap[tipo] || 'blue'
 
   const gradients = {
     blue: 'from-blue-600 to-indigo-700',
     green: 'from-green-600 to-teal-700',
     amber: 'from-amber-500 to-orange-600',
+    purple: 'from-purple-600 to-violet-700',
   }
 
   const buildDados = () => {
@@ -90,6 +91,21 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
             </>
           )}
 
+          {tipo === 'linktree' && (
+            <>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-4xl">🔗</span>
+                <div>
+                  <div className="text-sm opacity-75">Linktree / Link em Bio</div>
+                  <div className="text-4xl font-bold">{fmt(resultado.setup)}</div>
+                </div>
+              </div>
+              <div className="bg-white/20 rounded-xl px-4 py-2 text-sm">
+                ✦ Preço fixo · Pagamento único · Sem mensalidade
+              </div>
+            </>
+          )}
+
           {tipo === 'combo' && (
             <>
               <div className="space-y-2 mb-4">
@@ -139,10 +155,19 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
 
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
-            <div className="flex items-center gap-2"><span>⏱️</span><span><strong>Prazo:</strong> {tipo === 'combo' ? '45 dias úteis' : tipo === 'automacao' ? '30 dias úteis' : resultado.prazo_texto}</span></div>
-            <div className="flex items-center gap-2"><span>💳</span><span><strong>Pagamento:</strong> 50% + 50% entrega</span></div>
+            <div className="flex items-center gap-2">
+              <span>⏱️</span>
+              <span>
+                <strong>Prazo:</strong>{' '}
+                {tipo === 'combo' ? '45 dias úteis' :
+                 tipo === 'automacao' ? '30 dias úteis' :
+                 resultado.prazo_texto}
+              </span>
+            </div>
+            <div className="flex items-center gap-2"><span>💳</span><span><strong>Pagamento:</strong> {tipo === 'linktree' ? '100% antecipado' : '50% + 50% entrega'}</span></div>
             <div className="flex items-center gap-2"><span>📍</span><span><strong>Cidade:</strong> {resultado.cidade}</span></div>
             {tipo === 'automacao' && <div className="flex items-center gap-2"><span>📦</span><span><strong>Pacote:</strong> {resultado.nome_pacote}</span></div>}
+            {tipo === 'linktree' && <div className="flex items-center gap-2"><span>🔗</span><span><strong>Produto:</strong> Linktree</span></div>}
           </div>
         </div>
 
@@ -153,6 +178,7 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
             className={`flex-1 py-4 rounded-xl font-bold text-white text-base transition-all shadow-lg hover:shadow-xl ${
               color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
               color === 'green' ? 'bg-green-600 hover:bg-green-700' :
+              color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
               'bg-amber-500 hover:bg-amber-600'
             } disabled:opacity-50`}
           >

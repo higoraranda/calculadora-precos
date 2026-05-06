@@ -7,6 +7,7 @@ import {
   getPrazos,
   getPlanosMensais,
   calcularSite,
+  calcularLinktree,
 } from '../../services/api'
 import ResultPanel from '../../components/ResultPanel'
 import Step1_Tipo from './Step1_Tipo'
@@ -32,7 +33,7 @@ const defaultForm = {
 }
 
 function calcPreview(form, data, multiplicador) {
-  if (!form.tipo_id) return 0
+  if (!form.tipo_id || form.tipo_id === 'linktree') return 0
   const tipo = data.tipos.find((t) => t.id === form.tipo_id)
   const design = data.designs.find((d) => d.id === form.design_id)
   const conteudo = data.conteudos.find((c) => c.id === form.conteudo_id)
@@ -89,6 +90,7 @@ export default function SiteFlow({
       .finally(() => setLoading(false))
   }, [multiplicador])
 
+  const isLinktree = form.tipo_id === 'linktree'
   const currentTipo = data.tipos.find((t) => t.id === form.tipo_id)
   const previewSetup = calcPreview(form, data, multiplicador)
   const currentPlano = data.planos.find((p) => p.id === form.plano_id)
@@ -124,7 +126,25 @@ export default function SiteFlow({
     return true
   }
 
-  const handleNext = () => setStep((s) => Math.min(s + 1, 7))
+  const handleNext = async () => {
+    // Linktree: pula o wizard inteiro e vai direto ao resultado
+    if (step === 0 && isLinktree) {
+      setCalculating(true)
+      try {
+        const res = await calcularLinktree({ cidade, multiplicador_cidade: multiplicador })
+        if (isComboMode) {
+          onComboResult({ ...res, _form: form })
+        } else {
+          setResultado(res)
+        }
+      } finally {
+        setCalculating(false)
+      }
+      return
+    }
+    setStep((s) => Math.min(s + 1, 7))
+  }
+
   const handleBack = () => {
     if (step === 0) onBack()
     else setStep((s) => s - 1)
@@ -158,7 +178,11 @@ export default function SiteFlow({
 
   if (resultado)
     return (
-      <ResultPanel tipo="site" resultado={resultado} onReset={() => setResultado(null)} />
+      <ResultPanel
+        tipo={resultado.is_linktree ? 'linktree' : 'site'}
+        resultado={resultado}
+        onReset={() => setResultado(null)}
+      />
     )
 
   if (loading)
@@ -169,7 +193,6 @@ export default function SiteFlow({
     )
 
   const isLastStep = step === 7
-  // Mostra mensalidade no sidebar somente após o usuário escolher o plano (etapa 6+)
   const showMensalidade = step >= 7 && currentPlano
 
   return (
@@ -177,25 +200,31 @@ export default function SiteFlow({
       <div className="max-w-4xl mx-auto flex gap-6">
         {/* Main content */}
         <div className="flex-1 min-w-0">
-          {/* Progress bar */}
+          {/* Progress bar — oculta quando linktree está selecionado no step 0 */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-xl font-bold text-gray-900">🌐 Criação de Site</h2>
-              <span className="text-sm text-gray-500 font-medium">
-                {step + 1}/{STEP_LABELS.length}
-              </span>
+              {!isLinktree && (
+                <span className="text-sm text-gray-500 font-medium">
+                  {step + 1}/{STEP_LABELS.length}
+                </span>
+              )}
             </div>
-            <div className="flex gap-1">
-              {STEP_LABELS.map((_, i) => (
-                <div
-                  key={i}
-                  className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
-                    i <= step ? 'bg-green-500' : 'bg-gray-200'
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="text-xs text-gray-400 mt-1">{STEP_LABELS[step]}</div>
+            {!isLinktree && (
+              <>
+                <div className="flex gap-1">
+                  {STEP_LABELS.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
+                        i <= step ? 'bg-green-500' : 'bg-gray-200'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="text-xs text-gray-400 mt-1">{STEP_LABELS[step]}</div>
+              </>
+            )}
           </div>
 
           {/* Step card */}
@@ -269,7 +298,17 @@ export default function SiteFlow({
               >
                 ← Voltar
               </button>
-              {isLastStep ? (
+
+              {/* Linktree no step 0: botão direto para resultado */}
+              {step === 0 && isLinktree ? (
+                <button
+                  onClick={handleNext}
+                  disabled={calculating}
+                  className="px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {calculating ? '⏳ Calculando...' : isComboMode ? 'Próximo: Automação →' : '🔗 Ver Resultado →'}
+                </button>
+              ) : isLastStep ? (
                 <button
                   onClick={handleCalcular}
                   disabled={calculating}
@@ -296,31 +335,42 @@ export default function SiteFlow({
 
         {/* Sidebar — live price preview */}
         <div className="hidden lg:block w-52 shrink-0">
-          <div className="sticky top-24 bg-white rounded-2xl shadow-lg p-4 border-2 border-green-100">
+          <div className={`sticky top-24 bg-white rounded-2xl shadow-lg p-4 border-2 ${isLinktree ? 'border-purple-100' : 'border-green-100'}`}>
             <div className="text-xs text-gray-400 font-medium mb-1 uppercase tracking-wide">
               Investimento atual
             </div>
-            <div className="text-2xl font-bold text-green-700">
-              {form.tipo_id ? `R$ ${previewSetup.toLocaleString('pt-BR')}` : '—'}
-            </div>
-            <div className="text-xs text-gray-400 mt-0.5">setup estimado</div>
 
-            {/* Mensalidade só aparece no resumo (depois de escolher o plano) */}
-            {showMensalidade && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <div className="text-xs text-gray-400">+ mensalidade</div>
-                <div className="text-base font-semibold text-gray-700">
-                  R$ {(currentPlano.preco_final || 0).toLocaleString('pt-BR')}/mês
+            {isLinktree ? (
+              <>
+                <div className="text-2xl font-bold text-purple-700">R$ 150</div>
+                <div className="text-xs text-gray-400 mt-0.5">preço fixo</div>
+                <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                  🔗 Linktree sem mensalidade
                 </div>
-                <div className="text-xs text-gray-400">{currentPlano.nome}</div>
-              </div>
-            )}
+              </>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-green-700">
+                  {form.tipo_id ? `R$ ${previewSetup.toLocaleString('pt-BR')}` : '—'}
+                </div>
+                <div className="text-xs text-gray-400 mt-0.5">setup estimado</div>
 
-            {/* Dica antes de chegar no plano */}
-            {step < 6 && (
-              <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
-                A mensalidade será calculada com base no valor do setup.
-              </div>
+                {showMensalidade && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <div className="text-xs text-gray-400">+ mensalidade</div>
+                    <div className="text-base font-semibold text-gray-700">
+                      R$ {(currentPlano.preco_final || 0).toLocaleString('pt-BR')}/mês
+                    </div>
+                    <div className="text-xs text-gray-400">{currentPlano.nome}</div>
+                  </div>
+                )}
+
+                {step < 6 && (
+                  <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                    A mensalidade será calculada com base no valor do setup.
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -16,6 +16,7 @@ export const getConteudos = () => api.get('/site/conteudos').then(r => r.data)
 export const getPrazos = () => api.get('/site/prazos').then(r => r.data)
 export const getPlanosMensais = (multiplicador, setup = 0) => api.get(`/site/planos-mensais?multiplicador=${multiplicador}&setup=${setup}`).then(r => r.data)
 export const calcularSite = (data) => api.post('/site/calcular', data).then(r => r.data)
+export const calcularLinktree = (data) => api.post('/site/calcular-linktree', data).then(r => r.data)
 
 export const calcularCombo = (data) => api.post('/combo/calcular', data).then(r => r.data)
 export const gerarProposta = (tipo, dados) => api.post('/gerar-proposta', { tipo, dados }).then(r => r.data)

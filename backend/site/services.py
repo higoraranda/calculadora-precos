@@ -14,6 +14,18 @@ def get_tipos():
     return TIPOS_PROJETO
 
 
+def calcular_linktree(cidade: str) -> dict:
+    """Linktree: preço fixo de R$150, sem perguntas adicionais."""
+    return {
+        "cidade": cidade,
+        "tipo_nome": "Linktree / Link em Bio",
+        "setup": 150,
+        "mensalidade": 0,
+        "prazo_texto": "3 a 5 dias úteis",
+        "is_linktree": True,
+    }
+
+
 def get_funcionalidades():
     return FUNCIONALIDADES
 

@@ -10,9 +10,9 @@ TIPOS_PROJETO = [
 
 COMPLEXIDADES_DESIGN = [
     {"id": "simples", "nome": "Simples", "descricao": "Template adaptado", "multiplicador": 1.0},
-    {"id": "intermediario", "nome": "Intermediário", "descricao": "Design customizado, identidade visual", "multiplicador": 1.3},
-    {"id": "avancado", "nome": "Avançado", "descricao": "Design único, animações, micro-interações", "multiplicador": 1.6},
-    {"id": "premium", "nome": "Premium", "descricao": "Exclusivo, motion design, ilustrações", "multiplicador": 2.0},
+    {"id": "intermediario", "nome": "Intermediário", "descricao": "Design customizado, identidade visual", "multiplicador": 1.15},
+    {"id": "avancado", "nome": "Avançado", "descricao": "Design único, animações, micro-interações", "multiplicador": 1.30},
+    {"id": "premium", "nome": "Premium", "descricao": "Exclusivo, motion design, ilustrações", "multiplicador": 1.45},
 ]
 
 FUNCIONALIDADES = [
@@ -48,9 +48,9 @@ OPCOES_CONTEUDO = [
 ]
 
 PRAZOS = [
-    {"id": "padrao", "nome": "Padrão", "descricao": "30 dias úteis", "multiplicador": 1.0, "texto": "30 dias úteis"},
-    {"id": "acelerado", "nome": "Acelerado", "descricao": "15-20 dias úteis", "multiplicador": 1.2, "texto": "15-20 dias úteis"},
-    {"id": "urgente", "nome": "Urgente", "descricao": "até 10 dias úteis", "multiplicador": 1.5, "texto": "até 10 dias úteis"},
+    {"id": "padrao", "nome": "Padrão", "descricao": "30 dias", "multiplicador": 1.0, "texto": "30 dias"},
+    {"id": "acelerado", "nome": "Acelerado", "descricao": "15-20 dias", "multiplicador": 1.2, "texto": "15-20 dias"},
+    {"id": "urgente", "nome": "Urgente", "descricao": "até 10 dias", "multiplicador": 1.5, "texto": "até 10 dias"},
 ]
 
 PLANOS_MENSAIS = [

@@ -159,8 +159,8 @@ export default function ResultPanel({ tipo, resultado, onReset }) {
               <span>⏱️</span>
               <span>
                 <strong>Prazo:</strong>{' '}
-                {tipo === 'combo' ? '45 dias úteis' :
-                 tipo === 'automacao' ? '30 dias úteis' :
+                {tipo === 'combo' ? '45 dias' :
+                 tipo === 'automacao' ? '30 dias' :
                  resultado.prazo_texto}
               </span>
             </div>

@@ -21,7 +21,7 @@ def calcular_linktree(cidade: str) -> dict:
         "tipo_nome": "Linktree / Link em Bio",
         "setup": 150,
         "mensalidade": 0,
-        "prazo_texto": "3 a 5 dias úteis",
+        "prazo_texto": "3 a 5 dias",
         "is_linktree": True,
     }
 

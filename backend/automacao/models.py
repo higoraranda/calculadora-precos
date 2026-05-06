@@ -8,7 +8,6 @@ class CalcularAutomacaoRequest(BaseModel):
     pacote_id: Optional[str] = None
     servicos_ids: Optional[List[str]] = None
     extra_servicos_ids: Optional[List[str]] = None  # extras adicionados a um pacote
-    num_funcionarios: int = Field(default=1, ge=1, description="Quantidade de funcionários — 2% de acréscimo por pessoa adicional")
 
 class ServicoResponse(BaseModel):
     id: str

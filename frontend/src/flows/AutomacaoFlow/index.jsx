@@ -11,7 +11,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   const [selectedPacote, setSelectedPacote] = useState(null)
   const [selectedServicos, setSelectedServicos] = useState([])
   const [extrasDoPlano, setExtrasDoPlano] = useState([]) // extras adicionados ao pacote selecionado
-  const [numFuncionarios, setNumFuncionarios] = useState(1)
   const [resultado, setResultado] = useState(null)
   const [loading, setLoading] = useState(true)
   const [calculating, setCalculating] = useState(false)
@@ -48,10 +47,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
     setSelectedServicos((prev) => prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id])
   }
 
-  const handleFuncionarios = (delta) => {
-    setNumFuncionarios((prev) => Math.max(1, prev + delta))
-  }
-
   const handleCalcular = async () => {
     setCalculating(true)
     try {
@@ -64,7 +59,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
           modo: temExtras ? 'pacote_personalizado' : 'pacote',
           pacote_id: selectedPacote,
           extra_servicos_ids: temExtras ? extrasDoPlano : undefined,
-          num_funcionarios: numFuncionarios,
         }
       } else {
         payload = {
@@ -72,7 +66,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
           multiplicador_cidade: multiplicador,
           modo: 'personalizado',
           servicos_ids: selectedServicos,
-          num_funcionarios: numFuncionarios,
         }
       }
 
@@ -93,7 +86,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   }
 
   const canProceed = tab === 'pacote' ? !!selectedPacote : selectedServicos.length > 0
-  const acrescimoEquipe = numFuncionarios > 1 ? Math.round((numFuncionarios - 1) * 2) : 0
 
   if (resultado) {
     return <ResultPanel tipo="automacao" resultado={resultado} onReset={() => setResultado(null)} clientInfo={clientInfo} />
@@ -110,42 +102,9 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   return (
     <div className="min-h-screen px-4 py-20">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
+        <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">🤖 Automação com IA para Clínicas</h2>
           <p className="text-gray-500">Escolha um pacote ou monte o seu próprio conjunto de serviços.</p>
-        </div>
-
-        {/* Stepper de funcionários */}
-        <div className="mb-6 bg-white border-2 border-gray-200 rounded-2xl px-5 py-4 flex items-center justify-between gap-4 shadow-sm">
-          <div>
-            <p className="font-semibold text-gray-800 text-sm">👥 Quantos funcionários trabalham na clínica?</p>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {numFuncionarios === 1
-                ? 'Sem acréscimo para 1 pessoa'
-                : `+${acrescimoEquipe}% sobre setup e mensalidade (${numFuncionarios - 1} pessoa${numFuncionarios - 1 > 1 ? 's' : ''} adicional${numFuncionarios - 1 > 1 ? 'is' : ''})`}
-            </p>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => handleFuncionarios(-1)}
-              disabled={numFuncionarios <= 1}
-              className="w-9 h-9 rounded-xl border-2 border-gray-200 flex items-center justify-center text-lg font-bold text-gray-600 hover:border-blue-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-            >
-              −
-            </button>
-            <span className="w-8 text-center text-xl font-bold text-gray-900">{numFuncionarios}</span>
-            <button
-              onClick={() => handleFuncionarios(1)}
-              className="w-9 h-9 rounded-xl border-2 border-gray-200 flex items-center justify-center text-lg font-bold text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-all"
-            >
-              +
-            </button>
-            {numFuncionarios > 1 && (
-              <span className="ml-1 bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-lg">
-                +{acrescimoEquipe}%
-              </span>
-            )}
-          </div>
         </div>
 
         <div className="flex gap-2 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
@@ -171,7 +130,6 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
             onSelect={handleSelectPacote}
             extras={extrasDoPlano}
             onToggleExtra={toggleExtra}
-            numFuncionarios={numFuncionarios}
           />
         )}
 

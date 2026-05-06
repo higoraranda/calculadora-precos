@@ -2,32 +2,23 @@ import React, { useState } from 'react'
 
 const fmt = (n) => `R$ ${Number(n).toLocaleString('pt-BR')}`
 
-// Arredonda para a dezena mais próxima (igual ao backend)
-const arredondaDezena = (v) => Math.round(v / 10) * 10
-
 // Calcula o setup personalizado mantendo o mesmo % de desconto do pacote base
 function calcSetupPersonalizado(pacote, extrasServicos) {
   if (!extrasServicos.length) return { setup: pacote.setup_final, economia: pacote.economia }
   const somaExtras = extrasServicos.reduce((s, sv) => s + sv.preco_final, 0)
   const novaAvulso = pacote._soma_avulso + somaExtras
   const discountRatio = pacote._soma_avulso > 0 ? pacote.setup_final / pacote._soma_avulso : 1
-  const novoSetup = arredondaDezena(novaAvulso * discountRatio)
+  const novoSetup = Math.round((novaAvulso * discountRatio) / 10) * 10
   const economia = Math.max(0, novaAvulso - novoSetup)
-  return { setup: novoSetup, economia, avulso: novaAvulso }
+  return { setup: novoSetup, economia }
 }
 
-// Aplica multiplicador de funcionários (2% por pessoa adicional a partir da 2ª)
-function applyMultFunc(valor, numFuncionarios) {
-  const multFunc = 1 + Math.max(0, numFuncionarios - 1) * 0.02
-  return arredondaDezena(valor * multFunc)
-}
-
-export default function PackageCards({ pacotes, servicos, selected, onSelect, extras, onToggleExtra, numFuncionarios = 1 }) {
-  const [expandido, setExpandido] = useState(null) // id do pacote com painel aberto
+export default function PackageCards({ pacotes, servicos, selected, onSelect, extras, onToggleExtra }) {
+  const [expandido, setExpandido] = useState(null)
 
   const handleSelect = (id) => {
     onSelect(id)
-    setExpandido(id) // abre personalização ao selecionar
+    setExpandido(id)
   }
 
   return (
@@ -35,19 +26,12 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {pacotes.map((p) => {
           const isSelected = selected === p.id
-          // Extras selecionados para este pacote
           const extrasDoPlano = isSelected
             ? servicos.filter((s) => extras.includes(s.id) && !p.servicos_ids?.includes(s.id))
             : []
-          const { setup: setupBase, economia: economiaBase, avulso: avulsoBase } = isSelected && extrasDoPlano.length
+          const { setup: setupFinal, economia } = isSelected && extrasDoPlano.length
             ? calcSetupPersonalizado(p, extrasDoPlano)
-            : { setup: p.setup_final, economia: p.economia, avulso: p._soma_avulso }
-
-          // Aplica multiplicador de equipe no preview
-          const setupFinal = applyMultFunc(setupBase, numFuncionarios)
-          const mensalidadeFinal = applyMultFunc(p.mensalidade_final, numFuncionarios)
-          const avulsoFinal = avulsoBase != null ? applyMultFunc(avulsoBase, numFuncionarios) : null
-          const economia = avulsoFinal != null ? Math.max(0, avulsoFinal - setupFinal) : economiaBase
+            : { setup: p.setup_final, economia: p.economia }
 
           return (
             <button
@@ -68,7 +52,7 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
               )}
               <h3 className="font-bold text-lg text-gray-900 mb-1">{p.nome}</h3>
               <div className="text-2xl font-bold text-blue-700 mb-1">{fmt(setupFinal)}</div>
-              <div className="text-sm text-gray-500 mb-3">{fmt(mensalidadeFinal)}/mês</div>
+              <div className="text-sm text-gray-500 mb-3">{fmt(p.mensalidade_final)}/mês</div>
               {economia > 0 && (
                 <div className="text-xs bg-green-100 text-green-700 rounded-lg px-2 py-1 mb-3 font-medium">
                   💎 Economize {fmt(economia)}
@@ -81,7 +65,6 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
                     <span>{s}</span>
                   </li>
                 ))}
-                {/* Mostra extras adicionados */}
                 {isSelected && extrasDoPlano.map((s) => (
                   <li key={s.id} className="flex items-start gap-2 text-xs text-blue-600 font-medium">
                     <span className="text-blue-500 mt-0.5 flex-shrink-0">+</span>
@@ -99,21 +82,16 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
         })}
       </div>
 
-      {/* Painel de personalização — aparece ao selecionar um pacote */}
+      {/* Painel de personalização */}
       {selected && (() => {
         const pacoteSel = pacotes.find((p) => p.id === selected)
         if (!pacoteSel) return null
         const idsNoPacote = new Set(pacoteSel.servicos_ids || [])
         const servicosExtras = servicos.filter((s) => !idsNoPacote.has(s.id))
         const extrasAtivos = servicos.filter((s) => extras.includes(s.id) && !idsNoPacote.has(s.id))
-        const { setup: setupBase, economia: economiaBase, avulso: avulsoBase } = extrasAtivos.length
+        const { setup: setupAtual, economia: economiaAtual } = extrasAtivos.length
           ? calcSetupPersonalizado(pacoteSel, extrasAtivos)
-          : { setup: pacoteSel.setup_final, economia: pacoteSel.economia, avulso: pacoteSel._soma_avulso }
-
-        const setupAtual = applyMultFunc(setupBase, numFuncionarios)
-        const avulsoAtual = avulsoBase != null ? applyMultFunc(avulsoBase, numFuncionarios) : null
-        const economiaAtual = avulsoAtual != null ? Math.max(0, avulsoAtual - setupAtual) : economiaBase
-
+          : { setup: pacoteSel.setup_final, economia: pacoteSel.economia }
         const descPct = pacoteSel._soma_avulso > 0
           ? Math.round((1 - pacoteSel.setup_final / pacoteSel._soma_avulso) * 1000) / 10
           : 0

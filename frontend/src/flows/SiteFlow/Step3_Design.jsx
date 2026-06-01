@@ -1,41 +1,35 @@
 import React from 'react'
 
 const stars = { simples: 1, intermediario: 2, avancado: 3, premium: 4 }
-const colors = {
-  simples: 'text-gray-500',
-  intermediario: 'text-blue-500',
-  avancado: 'text-purple-500',
-  premium: 'text-amber-500',
-}
 
 export default function Step3_Design({ designs, value, onChange }) {
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-800 mb-4">Nível de complexidade do design</h3>
+      <h3 className="mb-4 text-lg font-bold text-foreground">Nível de complexidade do design</h3>
       <div className="space-y-3">
         {designs.map((d) => (
           <button
             key={d.id}
             onClick={() => onChange(d.id)}
-            className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+            className={`w-full rounded-lg border p-4 text-left transition-all ${
               value === d.id
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-200 bg-white hover:border-green-300'
+                ? 'border-primary bg-primary/10'
+                : 'border-border bg-card hover:border-primary/40'
             }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className={`font-semibold text-gray-900 flex items-center gap-2`}>
-                  <span className={colors[d.id]}>{'★'.repeat(stars[d.id] || 1)}{'☆'.repeat(4 - (stars[d.id] || 1))}</span>
+                <div className="flex items-center gap-2 font-semibold text-foreground">
+                  <span className="text-primary">{'★'.repeat(stars[d.id] || 1)}<span className="text-muted-foreground/30">{'☆'.repeat(4 - (stars[d.id] || 1))}</span></span>
                   {d.nome}
                 </div>
-                <div className="text-sm text-gray-500 mt-0.5">{d.descricao}</div>
+                <div className="mt-0.5 text-sm text-muted-foreground">{d.descricao}</div>
               </div>
               <div
-                className={`text-sm font-bold px-3 py-1 rounded-full shrink-0 ml-3 ${
+                className={`ml-3 shrink-0 rounded-full px-3 py-1 text-sm font-bold ${
                   d.multiplicador > 1
-                    ? 'bg-orange-100 text-orange-700'
-                    : 'bg-gray-100 text-gray-600'
+                    ? 'bg-warning/15 text-warning'
+                    : 'bg-muted text-muted-foreground'
                 }`}
               >
                 {d.multiplicador === 1.0

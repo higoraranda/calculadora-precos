@@ -10,36 +10,36 @@ export default function CustomBuilder({ servicos, selected, onToggle }) {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {servicos.map(s => {
           const isSelected = selected.includes(s.id)
           return (
             <button
               key={s.id}
               onClick={() => onToggle(s.id)}
-              className={`text-left p-4 rounded-xl border-2 transition-all ${
-                isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white hover:border-blue-300'
+              className={`rounded-lg border p-4 text-left transition-all ${
+                isSelected ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary/40'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-sm font-medium text-gray-800 leading-tight">{s.nome}</span>
-                <div className={`w-5 h-5 rounded flex-shrink-0 border-2 flex items-center justify-center mt-0.5 ${
-                  isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
+                <span className="text-sm font-medium leading-tight text-foreground">{s.nome}</span>
+                <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 ${
+                  isSelected ? 'border-primary bg-primary' : 'border-muted-foreground/40'
                 }`}>
-                  {isSelected && <span className="text-white text-xs">✓</span>}
+                  {isSelected && <span className="text-xs text-primary-foreground">✓</span>}
                 </div>
               </div>
-              <span className="text-blue-700 font-semibold text-sm mt-1 block">{fmt(s.preco_final)}</span>
+              <span className="mt-1 block text-sm font-semibold text-primary tabular">{fmt(s.preco_final)}</span>
             </button>
           )
         })}
       </div>
 
       {selected.length > 0 && (
-        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-blue-700 font-medium">{selected.length} serviço{selected.length > 1 ? 's' : ''} selecionado{selected.length > 1 ? 's' : ''}</span>
-            <span className="text-lg font-bold text-blue-800">Setup: {fmt(totalSetup)}</span>
+        <div className="rounded-xl border border-primary/20 bg-primary/10 p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-primary">{selected.length} serviço{selected.length > 1 ? 's' : ''} selecionado{selected.length > 1 ? 's' : ''}</span>
+            <span className="text-lg font-bold text-primary tabular">Setup: {fmt(totalSetup)}</span>
           </div>
         </div>
       )}

@@ -72,26 +72,26 @@ export default function ResumoSite({
 
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-800 mb-1">✅ Confirme as escolhas</h3>
-      <p className="text-sm text-gray-500 mb-4">
-        Revise cada item antes de calcular. Clique em <strong>Editar</strong> para ajustar.
+      <h3 className="mb-1 text-lg font-bold text-foreground">✅ Confirme as escolhas</h3>
+      <p className="mb-4 text-sm text-muted-foreground">
+        Revise cada item antes de calcular. Clique em <strong className="text-foreground">Editar</strong> para ajustar.
       </p>
       <div className="space-y-2">
         {rows.map((r) => (
           <div
             key={r.step}
-            className="flex items-start justify-between bg-white rounded-xl border border-gray-200 px-4 py-3 gap-3"
+            className="flex items-start justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3"
           >
-            <div className="flex items-start gap-3 flex-1 min-w-0">
-              <span className="text-base mt-0.5">{r.icon}</span>
+            <div className="flex min-w-0 flex-1 items-start gap-3">
+              <span className="mt-0.5 text-base">{r.icon}</span>
               <div className="min-w-0">
-                <span className="text-xs text-gray-400 block">{r.label}</span>
-                <span className="text-sm font-medium text-gray-800 block truncate">{r.value}</span>
+                <span className="block text-xs text-muted-foreground">{r.label}</span>
+                <span className="block truncate text-sm font-medium text-foreground">{r.value}</span>
               </div>
             </div>
             <button
               onClick={() => onEdit(r.step)}
-              className="text-xs text-green-600 hover:text-green-800 font-semibold transition-colors shrink-0 underline"
+              className="shrink-0 text-xs font-semibold text-primary underline transition-colors hover:text-accent"
             >
               Editar
             </button>
@@ -99,7 +99,7 @@ export default function ResumoSite({
         ))}
       </div>
       {dados.banco_imagens && (
-        <div className="mt-2 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700">
+        <div className="mt-2 flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary">
           <span>🖼️</span>
           <span>Banco de imagens premium incluído (+R$ 200)</span>
         </div>

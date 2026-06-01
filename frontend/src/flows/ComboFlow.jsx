@@ -68,9 +68,9 @@ export default function ComboFlow({ cidade, multiplicador, onBack, clientInfo })
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500" />
-        <p className="text-gray-500 text-sm">Calculando combo com desconto…</p>
+      <div className="flex flex-col items-center justify-center gap-4 py-20">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
+        <p className="text-sm text-muted-foreground">Calculando combo com desconto…</p>
       </div>
     )
   }
@@ -78,22 +78,22 @@ export default function ComboFlow({ cidade, multiplicador, onBack, clientInfo })
   return (
     <>
       {/* Combo progress banner */}
-      <div className="fixed top-14 left-0 right-0 z-40 bg-amber-50 border-b border-amber-200 py-2 px-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-center gap-4">
-          <div className={`flex items-center gap-2 text-sm font-semibold ${phase === 'automacao' ? 'text-amber-700' : 'text-gray-400'}`}>
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${phase === 'automacao' ? 'bg-amber-500 text-white' : 'bg-green-500 text-white'}`}>
+      <div className="glass fixed left-0 right-0 top-16 z-40 border-b border-border px-4 py-2">
+        <div className="mx-auto flex max-w-5xl items-center justify-center gap-4">
+          <div className={`flex items-center gap-2 text-sm font-semibold ${phase === 'automacao' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${phase === 'automacao' ? 'bg-primary text-primary-foreground' : 'bg-success text-primary-foreground'}`}>
               {phase === 'automacao' ? '1' : '✓'}
             </span>
             Automação com IA
           </div>
-          <span className="text-gray-300">→</span>
-          <div className={`flex items-center gap-2 text-sm font-semibold ${phase === 'site' ? 'text-amber-700' : 'text-gray-400'}`}>
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${phase === 'site' ? 'bg-amber-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
+          <span className="text-muted-foreground/50">→</span>
+          <div className={`flex items-center gap-2 text-sm font-semibold ${phase === 'site' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${phase === 'site' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
               2
             </span>
             Criação de Site
           </div>
-          <span className="ml-4 text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold">
+          <span className="ml-4 rounded-full gradient-primary px-2 py-0.5 text-xs font-bold text-primary-foreground shadow-glow">
             🎁 10% OFF no setup total
           </span>
         </div>

@@ -1,38 +1,33 @@
 import React from 'react'
 
-const configs = {
-  padrao: { icon: '🐢', color: 'text-green-600', bg: 'bg-green-50 border-green-200', badge: 'bg-gray-100 text-gray-600' },
-  acelerado: { icon: '🚀', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', badge: 'bg-amber-100 text-amber-700' },
-  urgente: { icon: '⚡', color: 'text-red-600', bg: 'bg-red-50 border-red-200', badge: 'bg-red-100 text-red-700' },
-}
+const icons = { padrao: '🐢', acelerado: '🚀', urgente: '⚡' }
 
 export default function Step6_Prazo({ prazos, value, onChange }) {
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-800 mb-4">Prazo de entrega</h3>
+      <h3 className="mb-4 text-lg font-bold text-foreground">Prazo de entrega</h3>
       <div className="space-y-3">
         {prazos.map((p) => {
-          const cfg = configs[p.id] || configs.padrao
           const isOn = value === p.id
           return (
             <button
               key={p.id}
               onClick={() => onChange(p.id)}
-              className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                isOn ? `border-green-500 ${cfg.bg}` : 'border-gray-200 bg-white hover:border-green-300'
+              className={`w-full rounded-lg border p-4 text-left transition-all ${
+                isOn ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary/40'
               }`}
             >
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{cfg.icon}</span>
+                  <span className="text-2xl">{icons[p.id] || '🐢'}</span>
                   <div>
-                    <div className="font-semibold text-gray-900">{p.nome}</div>
-                    <div className={`text-sm font-medium mt-0.5 ${cfg.color}`}>{p.descricao}</div>
+                    <div className="font-semibold text-foreground">{p.nome}</div>
+                    <div className="mt-0.5 text-sm font-medium text-muted-foreground">{p.descricao}</div>
                   </div>
                 </div>
                 <div
-                  className={`text-sm font-bold px-3 py-1 rounded-full shrink-0 ${
-                    p.multiplicador > 1 ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
+                  className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${
+                    p.multiplicador > 1 ? 'bg-warning/15 text-warning' : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   {p.multiplicador === 1.0
@@ -44,7 +39,7 @@ export default function Step6_Prazo({ prazos, value, onChange }) {
           )
         })}
       </div>
-      <p className="text-xs text-gray-400 mt-4">
+      <p className="mt-4 text-xs text-muted-foreground">
         💡 O acréscimo de prazo urgente refere-se ao valor do setup (desenvolvimento), não à mensalidade.
       </p>
     </div>

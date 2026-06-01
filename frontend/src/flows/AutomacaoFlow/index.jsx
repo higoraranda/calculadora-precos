@@ -94,29 +94,29 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen px-4 py-20">
-      <div className="max-w-4xl mx-auto">
+    <div className="px-4 py-12">
+      <div className="mx-auto max-w-4xl animate-fade-in">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">🤖 Automação com IA para Clínicas</h2>
-          <p className="text-gray-500">Escolha um pacote ou monte o seu próprio conjunto de serviços.</p>
+          <h2 className="mb-1 text-2xl font-bold tracking-tight text-foreground">🤖 Automação com IA para Clínicas</h2>
+          <p className="text-muted-foreground">Escolha um pacote ou monte o seu próprio conjunto de serviços.</p>
         </div>
 
-        <div className="flex gap-2 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
+        <div className="mb-6 flex w-fit gap-1 rounded-xl border border-border bg-muted p-1">
           <button
             onClick={() => setTab('pacote')}
-            className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'pacote' ? 'bg-white shadow text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`rounded-lg px-5 py-2 text-sm font-semibold transition-all ${tab === 'pacote' ? 'bg-card text-primary shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
           >
             📦 Pacotes
           </button>
           <button
             onClick={() => setTab('personalizado')}
-            className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'personalizado' ? 'bg-white shadow text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`rounded-lg px-5 py-2 text-sm font-semibold transition-all ${tab === 'personalizado' ? 'bg-card text-primary shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
           >
             ⚙️ Do zero
           </button>
@@ -140,14 +140,14 @@ export default function AutomacaoFlow({ cidade, multiplicador, onBack, isComboMo
         <div className="mt-8 flex justify-between">
           <button
             onClick={onBack}
-            className="px-6 py-3 rounded-xl text-gray-600 border-2 border-gray-200 hover:border-gray-300 font-semibold transition-all"
+            className="rounded-lg border border-border bg-card px-6 py-3 font-semibold text-foreground transition-all hover:bg-muted"
           >
             ← Voltar
           </button>
           <button
             onClick={handleCalcular}
             disabled={!canProceed || calculating}
-            className="px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-lg gradient-primary px-8 py-3 font-bold text-primary-foreground shadow-glow transition-all hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {calculating ? '⏳ Calculando...' : isComboMode ? 'Próximo: Site →' : 'Ver Resultado →'}
           </button>

@@ -23,7 +23,7 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {pacotes.map((p) => {
           const isSelected = selected === p.id
           const extrasDoPlano = isSelected
@@ -37,44 +37,44 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
             <button
               key={p.id}
               onClick={() => handleSelect(p.id)}
-              className={`relative text-left p-5 rounded-2xl border-2 transition-all shadow-sm hover:shadow-md ${
+              className={`relative rounded-xl border p-5 text-left shadow-card transition-all hover:shadow-glow ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50'
+                  ? 'border-primary bg-primary/10'
                   : p.destaque
-                  ? 'border-indigo-300 bg-white'
-                  : 'border-gray-200 bg-white hover:border-blue-300'
+                  ? 'border-primary/40 bg-card'
+                  : 'border-border bg-card hover:border-primary/40'
               }`}
             >
               {p.destaque && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full gradient-primary px-3 py-1 text-xs font-bold text-primary-foreground shadow-glow">
                   ⭐ MAIS POPULAR
                 </span>
               )}
-              <h3 className="font-bold text-lg text-gray-900 mb-1">{p.nome}</h3>
-              <div className="text-2xl font-bold text-blue-700 mb-1">{fmt(setupFinal)}</div>
-              <div className="text-sm text-gray-500 mb-3">{fmt(p.mensalidade_final)}/mês</div>
+              <h3 className="mb-1 text-lg font-bold text-foreground">{p.nome}</h3>
+              <div className="mb-1 text-2xl font-bold text-primary tabular">{fmt(setupFinal)}</div>
+              <div className="mb-3 text-sm text-muted-foreground tabular">{fmt(p.mensalidade_final)}/mês</div>
               {economia > 0 && (
-                <div className="text-xs bg-green-100 text-green-700 rounded-lg px-2 py-1 mb-3 font-medium">
+                <div className="mb-3 rounded-lg bg-success/15 px-2 py-1 text-xs font-medium text-success">
                   💎 Economize {fmt(economia)}
                 </div>
               )}
               <ul className="space-y-1">
                 {p.servicos.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
-                    <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                  <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <span className="mt-0.5 flex-shrink-0 text-primary">✓</span>
                     <span>{s}</span>
                   </li>
                 ))}
                 {isSelected && extrasDoPlano.map((s) => (
-                  <li key={s.id} className="flex items-start gap-2 text-xs text-blue-600 font-medium">
-                    <span className="text-blue-500 mt-0.5 flex-shrink-0">+</span>
+                  <li key={s.id} className="flex items-start gap-2 text-xs font-medium text-primary">
+                    <span className="mt-0.5 flex-shrink-0 text-primary">+</span>
                     <span>{s.nome}</span>
                   </li>
                 ))}
               </ul>
               {isSelected && (
-                <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-white" />
+                <div className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+                  <div className="h-2 w-2 rounded-full bg-primary-foreground" />
                 </div>
               )}
             </button>
@@ -97,38 +97,38 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
           : 0
 
         return (
-          <div className="bg-white rounded-2xl border-2 border-blue-200 p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <div className="rounded-xl border border-primary/30 bg-card p-5 shadow-card">
+            <div className="mb-4 flex items-center justify-between">
               <div>
-                <h4 className="font-bold text-gray-900">✏️ Personalizar plano {pacoteSel.nome}</h4>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Adicione serviços extras mantendo o desconto de <strong>{descPct}%</strong> do pacote
+                <h4 className="font-bold text-foreground">✏️ Personalizar plano {pacoteSel.nome}</h4>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Adicione serviços extras mantendo o desconto de <strong className="text-foreground">{descPct}%</strong> do pacote
                 </p>
               </div>
               {extrasAtivos.length > 0 && (
                 <div className="text-right">
-                  <div className="text-lg font-bold text-blue-700">{fmt(setupAtual)}</div>
-                  <div className="text-xs text-green-600 font-medium">💎 Economiza {fmt(economiaAtual)}</div>
+                  <div className="text-lg font-bold text-primary tabular">{fmt(setupAtual)}</div>
+                  <div className="text-xs font-medium text-success">💎 Economiza {fmt(economiaAtual)}</div>
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {servicosExtras.map((s) => {
                 const isOn = extras.includes(s.id)
                 return (
                   <button
                     key={s.id}
                     onClick={(e) => { e.stopPropagation(); onToggleExtra(s.id) }}
-                    className={`text-left px-4 py-3 rounded-xl border-2 transition-all flex items-center justify-between gap-2 ${
-                      isOn ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-gray-50 hover:border-blue-300'
+                    className={`flex items-center justify-between gap-2 rounded-lg border px-4 py-3 text-left transition-all ${
+                      isOn ? 'border-primary bg-primary/10' : 'border-border bg-muted/40 hover:border-primary/40'
                     }`}
                   >
-                    <span className="text-sm text-gray-800 leading-tight">{s.nome}</span>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs font-semibold text-blue-700">{fmt(s.preco_final)}</span>
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isOn ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}`}>
-                        {isOn && <span className="text-white text-xs font-bold">✓</span>}
+                    <span className="text-sm leading-tight text-foreground">{s.nome}</span>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="text-xs font-semibold text-primary tabular">{fmt(s.preco_final)}</span>
+                      <div className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-all ${isOn ? 'border-primary bg-primary' : 'border-muted-foreground/40'}`}>
+                        {isOn && <span className="text-xs font-bold text-primary-foreground">✓</span>}
                       </div>
                     </div>
                   </button>
@@ -137,7 +137,7 @@ export default function PackageCards({ pacotes, servicos, selected, onSelect, ex
             </div>
 
             {extrasAtivos.length === 0 && (
-              <p className="text-sm text-gray-400 text-center py-2">
+              <p className="py-2 text-center text-sm text-muted-foreground">
                 Selecione serviços acima para personalizar o plano.
               </p>
             )}

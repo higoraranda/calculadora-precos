@@ -19,51 +19,53 @@ export default function CustomCityForm({ onSave, onCancel }) {
   }
 
   const mult = getMultiplicador()
+  const inputCls =
+    'w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/30'
 
   return (
-    <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
-      <h3 className="font-semibold text-gray-800 mb-3">Nova cidade</h3>
+    <div className="mb-4 rounded-lg border border-border bg-muted/50 p-4">
+      <h3 className="mb-3 font-semibold text-foreground">Nova cidade</h3>
 
       <input
         type="text"
         placeholder="Nome da cidade"
         value={nome}
         onChange={e => setNome(e.target.value)}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-3 focus:ring-2 focus:ring-blue-400 outline-none"
+        className={`mb-3 ${inputCls}`}
       />
 
-      <div className="space-y-1 mb-3">
+      <div className="mb-3 space-y-1">
         {PRESETS.map((p, i) => (
-          <label key={i} className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer text-sm transition-all ${presetIdx === i ? 'bg-blue-50 border border-blue-300' : 'hover:bg-gray-100'}`}>
+          <label key={i} className={`flex cursor-pointer items-center gap-2 rounded-lg p-2 text-sm transition-all ${presetIdx === i ? 'border border-primary/30 bg-primary/10' : 'hover:bg-muted'}`}>
             <input type="radio" name="preset" checked={presetIdx === i} onChange={() => setPresetIdx(i)} className="sr-only" />
             <span>{p.icon}</span>
-            <span className="flex-1">{p.label}</span>
-            {p.multiplicador !== null && <span className="text-gray-400 text-xs">×{p.multiplicador}</span>}
+            <span className="flex-1 text-foreground">{p.label}</span>
+            {p.multiplicador !== null && <span className="text-xs text-muted-foreground">×{p.multiplicador}</span>}
           </label>
         ))}
       </div>
 
       {PRESETS[presetIdx].multiplicador === null && (
         <div className="mb-3">
-          <label className="text-xs text-gray-500 mb-1 block">Multiplicador personalizado (0.8 – 2.5)</label>
+          <label className="mb-1 block text-xs text-muted-foreground">Multiplicador personalizado (0.8 – 2.5)</label>
           <input
             type="number"
             min={0.8} max={2.5} step={0.1}
             value={customMult}
             onChange={e => setCustomMult(parseFloat(e.target.value))}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+            className={inputCls}
           />
         </div>
       )}
 
-      <div className="text-xs text-gray-500 bg-white rounded-lg p-2 border border-gray-200 mb-3">
-        💡 Multiplicador aplicado: <strong>×{mult.toFixed(1)}</strong>
-        <span className="text-gray-400"> — preços {mult > 1 ? `${Math.round((mult-1)*100)}% maiores` : 'base (sem ajuste)'}</span>
+      <div className="mb-3 rounded-lg border border-border bg-card p-2 text-xs text-muted-foreground">
+        💡 Multiplicador aplicado: <strong className="text-foreground">×{mult.toFixed(1)}</strong>
+        <span> — preços {mult > 1 ? `${Math.round((mult-1)*100)}% maiores` : 'base (sem ajuste)'}</span>
       </div>
 
       <div className="flex gap-2">
-        <button onClick={() => nome.trim() && onSave({ nome: nome.trim(), multiplicador: mult })} disabled={!nome.trim()} className="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold disabled:opacity-40">Salvar</button>
-        <button onClick={onCancel} className="px-4 py-2 text-gray-500 text-sm">Cancelar</button>
+        <button onClick={() => nome.trim() && onSave({ nome: nome.trim(), multiplicador: mult })} disabled={!nome.trim()} className="flex-1 rounded-lg gradient-primary py-2 text-sm font-semibold text-primary-foreground shadow-glow transition-all hover:brightness-110 disabled:opacity-40">Salvar</button>
+        <button onClick={onCancel} className="px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground">Cancelar</button>
       </div>
     </div>
   )

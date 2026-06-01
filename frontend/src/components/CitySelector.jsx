@@ -13,18 +13,6 @@ export default function CitySelector({ onSelect, mode }) {
   const [showCustom, setShowCustom] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const colorMap = {
-    automacao: 'blue',
-    site: 'green',
-    combo: 'amber',
-  }
-  const color = colorMap[mode] || 'blue'
-  const btnClass = {
-    blue: 'bg-blue-600 hover:bg-blue-700',
-    green: 'bg-green-600 hover:bg-green-700',
-    amber: 'bg-amber-500 hover:bg-amber-600',
-  }[color]
-
   useEffect(() => {
     getCidades().then(data => {
       setCidades(data.cidades)
@@ -54,48 +42,46 @@ export default function CitySelector({ onSelect, mode }) {
     setShowCustom(false)
   }
 
-  if (loading) return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <div className="h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
+    </div>
+  )
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Selecione a cidade</h2>
-        <p className="text-gray-500 text-sm mb-6">O preço varia de acordo com a região do cliente.</p>
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-card animate-scale-in">
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-foreground">Selecione a cidade</h2>
+        <p className="mb-6 text-sm text-muted-foreground">O preço varia de acordo com a região do cliente.</p>
 
-        <div className="space-y-2 mb-4">
-          {allCities.map(c => (
-            <label
-              key={c.nome}
-              className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                selected === c.nome ? `border-${color}-500 bg-${color}-50` : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <input
-                type="radio"
-                name="cidade"
-                value={c.nome}
-                checked={selected === c.nome}
-                onChange={() => setSelected(c.nome)}
-                className="sr-only"
-              />
-              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                selected === c.nome ? `border-${color}-500 bg-${color}-500` : 'border-gray-300'
-              }`}>
-                {selected === c.nome && <div className="w-2 h-2 rounded-full bg-white" />}
-              </div>
-              <span className="font-medium text-gray-800">{c.nome}</span>
-              {c.multiplicador > 1.0 && (
-                <span className="ml-auto text-xs text-gray-400">+{Math.round((c.multiplicador - 1) * 100)}% regional</span>
-              )}
-            </label>
-          ))}
+        <div className="mb-4 space-y-2">
+          {allCities.map(c => {
+            const active = selected === c.nome
+            return (
+              <label
+                key={c.nome}
+                className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all ${
+                  active ? 'border-primary bg-primary/10' : 'border-border hover:border-ring/40 hover:bg-muted'
+                }`}
+              >
+                <input type="radio" name="cidade" value={c.nome} checked={active} onChange={() => setSelected(c.nome)} className="sr-only" />
+                <div className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${active ? 'border-primary bg-primary' : 'border-muted-foreground/40'}`}>
+                  {active && <div className="h-1.5 w-1.5 rounded-full bg-primary-foreground" />}
+                </div>
+                <span className="font-medium text-foreground">{c.nome}</span>
+                {c.multiplicador > 1.0 && (
+                  <span className="ml-auto text-xs text-muted-foreground">+{Math.round((c.multiplicador - 1) * 100)}% regional</span>
+                )}
+              </label>
+            )
+          })}
 
           <button
             onClick={() => setShowCustom(!showCustom)}
-            className="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-gray-300 hover:border-gray-400 cursor-pointer transition-all w-full text-left"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border p-3 text-left transition-all hover:border-ring/40 hover:bg-muted"
           >
-            <span className="text-gray-400 text-lg">+</span>
-            <span className="text-gray-500 font-medium">Outra cidade</span>
+            <span className="text-lg text-muted-foreground">+</span>
+            <span className="font-medium text-muted-foreground">Outra cidade</span>
           </button>
         </div>
 
@@ -106,8 +92,10 @@ export default function CitySelector({ onSelect, mode }) {
         <button
           onClick={handleSubmit}
           disabled={!selected}
-          className={`w-full mt-4 py-3 rounded-xl text-white font-semibold text-base transition-all ${
-            selected ? `${btnClass} shadow-md hover:shadow-lg` : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          className={`mt-4 w-full rounded-lg py-3 text-base font-semibold transition-all ${
+            selected
+              ? 'gradient-primary text-primary-foreground shadow-glow hover:brightness-110 active:scale-[0.99]'
+              : 'cursor-not-allowed bg-muted text-muted-foreground'
           }`}
         >
           Continuar →

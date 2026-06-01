@@ -190,7 +190,7 @@ export default function SiteFlow({
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600" />
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
       </div>
     )
 
@@ -198,16 +198,16 @@ export default function SiteFlow({
   const showMensalidade = step >= 7 && currentPlano
 
   return (
-    <div className="min-h-screen px-4 py-20">
-      <div className="max-w-4xl mx-auto flex gap-6">
+    <div className="px-4 py-12">
+      <div className="mx-auto flex max-w-4xl gap-6 animate-fade-in">
         {/* Main content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Progress bar — oculta quando linktree está selecionado no step 0 */}
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-bold text-gray-900">🌐 Criação de Site</h2>
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">🌐 Criação de Site</h2>
               {!isLinktree && (
-                <span className="text-sm text-gray-500 font-medium">
+                <span className="text-sm font-medium text-muted-foreground">
                   {step + 1}/{STEP_LABELS.length}
                 </span>
               )}
@@ -218,19 +218,19 @@ export default function SiteFlow({
                   {STEP_LABELS.map((_, i) => (
                     <div
                       key={i}
-                      className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
-                        i <= step ? 'bg-green-500' : 'bg-gray-200'
+                      className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                        i <= step ? 'bg-primary' : 'bg-muted'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="text-xs text-gray-400 mt-1">{STEP_LABELS[step]}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{STEP_LABELS[step]}</div>
               </>
             )}
           </div>
 
           {/* Step card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-card">
             {step === 0 && (
               <Step1_Tipo tipos={data.tipos} value={form.tipo_id} onChange={handleTipoChange} />
             )}
@@ -293,10 +293,10 @@ export default function SiteFlow({
             )}
 
             {/* Navigation */}
-            <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+            <div className="mt-6 flex justify-between border-t border-border pt-4">
               <button
                 onClick={handleBack}
-                className="px-6 py-3 rounded-xl text-gray-600 border-2 border-gray-200 hover:border-gray-300 font-semibold transition-all"
+                className="rounded-lg border border-border bg-card px-6 py-3 font-semibold text-foreground transition-all hover:bg-muted"
               >
                 ← Voltar
               </button>
@@ -306,7 +306,7 @@ export default function SiteFlow({
                 <button
                   onClick={handleNext}
                   disabled={calculating}
-                  className="px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="rounded-lg gradient-primary px-8 py-3 font-bold text-primary-foreground shadow-glow transition-all hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {calculating ? '⏳ Calculando...' : isComboMode ? 'Próximo: Automação →' : '🔗 Ver Resultado →'}
                 </button>
@@ -314,7 +314,7 @@ export default function SiteFlow({
                 <button
                   onClick={handleCalcular}
                   disabled={calculating}
-                  className="px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="rounded-lg gradient-primary px-8 py-3 font-bold text-primary-foreground shadow-glow transition-all hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {calculating
                     ? '⏳ Calculando...'
@@ -326,7 +326,7 @@ export default function SiteFlow({
                 <button
                   onClick={handleNext}
                   disabled={!canNext()}
-                  className="px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="rounded-lg gradient-primary px-8 py-3 font-bold text-primary-foreground shadow-glow transition-all hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Avançar →
                 </button>
@@ -336,39 +336,39 @@ export default function SiteFlow({
         </div>
 
         {/* Sidebar — live price preview */}
-        <div className="hidden lg:block w-52 shrink-0">
-          <div className={`sticky top-24 bg-white rounded-2xl shadow-lg p-4 border-2 ${isLinktree ? 'border-purple-100' : 'border-green-100'}`}>
-            <div className="text-xs text-gray-400 font-medium mb-1 uppercase tracking-wide">
+        <div className="hidden w-52 shrink-0 lg:block">
+          <div className="sticky top-24 rounded-xl border border-border bg-card p-4 shadow-card">
+            <div className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Investimento atual
             </div>
 
             {isLinktree ? (
               <>
-                <div className="text-2xl font-bold text-purple-700">R$ 150</div>
-                <div className="text-xs text-gray-400 mt-0.5">preço fixo</div>
-                <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                <div className="text-2xl font-bold text-primary tabular">R$ 150</div>
+                <div className="mt-0.5 text-xs text-muted-foreground">preço fixo</div>
+                <div className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
                   🔗 Linktree sem mensalidade
                 </div>
               </>
             ) : (
               <>
-                <div className="text-2xl font-bold text-green-700">
+                <div className="text-2xl font-bold text-primary tabular">
                   {form.tipo_id ? `R$ ${previewSetup.toLocaleString('pt-BR')}` : '—'}
                 </div>
-                <div className="text-xs text-gray-400 mt-0.5">setup estimado</div>
+                <div className="mt-0.5 text-xs text-muted-foreground">setup estimado</div>
 
                 {showMensalidade && (
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <div className="text-xs text-gray-400">+ mensalidade</div>
-                    <div className="text-base font-semibold text-gray-700">
+                  <div className="mt-3 border-t border-border pt-3">
+                    <div className="text-xs text-muted-foreground">+ mensalidade</div>
+                    <div className="text-base font-semibold text-foreground tabular">
                       R$ {(currentPlano.preco_final || 0).toLocaleString('pt-BR')}/mês
                     </div>
-                    <div className="text-xs text-gray-400">{currentPlano.nome}</div>
+                    <div className="text-xs text-muted-foreground">{currentPlano.nome}</div>
                   </div>
                 )}
 
                 {step < 6 && (
-                  <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                  <div className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
                     A mensalidade será calculada com base no valor do setup.
                   </div>
                 )}

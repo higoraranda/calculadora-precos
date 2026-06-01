@@ -42,7 +42,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app-aurora min-h-screen">
       <Header
         mode={screen !== 'menu' ? mode : null}
         cidade={cidade?.nome}
@@ -50,7 +50,7 @@ export default function App() {
         onHome={handleHome}
       />
 
-      <main className="pt-14">
+      <main className="pt-16">
         {screen === 'menu' && <MainMenu onSelect={handleModeSelect} />}
 
         {screen === 'city' && (

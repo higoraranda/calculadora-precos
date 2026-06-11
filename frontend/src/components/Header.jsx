@@ -81,15 +81,6 @@ export default function Header({ mode, cidade, onBack, onHome }) {
           </span>
         )}
 
-        <a
-          href="https://project-k3a8s.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex shrink-0 items-center rounded-lg gradient-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition-all hover:brightness-110 active:scale-[0.98]"
-        >
-          Fazer orçamento
-        </a>
-
         <ThemeToggle />
       </div>
     </header>
